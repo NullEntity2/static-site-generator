@@ -1,0 +1,10 @@
+[project]
+name = "static-site-generator"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "debugpy>=1.8.22",
+]
