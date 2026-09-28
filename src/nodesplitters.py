@@ -27,39 +27,26 @@ def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: 
             new_nodes.append(new_node)
     return new_nodes
 
-def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
+def _split_nodes_markup(old_nodes: list[TextNode], extract, text_type: TextType, prefix: str) -> list[TextNode]:
     new_nodes = []
     for old_node in old_nodes:
-        links = extract_markdown_images(old_node.text)
-        if old_node.text_type != TextType.TEXT or not links:
+        if old_node.text_type != TextType.TEXT:
             new_nodes.append(old_node)
             continue
         text = old_node.text
-        for name, url in links:
-            tokens = text.split(f'![{name}]({url})', 1)
-            if tokens[0]:
-                new_nodes.append(TextNode(tokens[0], TextType.TEXT))
-            new_nodes.append(TextNode(name, TextType.IMAGE, url))
-            text = tokens[1]
+        for name, url in extract(text):
+            before, text = text.split(f'{prefix}[{name}]({url})', 1)
+            if before:
+                new_nodes.append(TextNode(before, TextType.TEXT))
+            new_nodes.append(TextNode(name, text_type, url))
         if text:
             new_nodes.append(TextNode(text, TextType.TEXT))
     return new_nodes
+
+
+def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
+    return _split_nodes_markup(old_nodes, extract_markdown_images, TextType.IMAGE, '!')
 
 
 def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
-    new_nodes = []
-    for old_node in old_nodes:
-        links = extract_markdown_links(old_node.text)
-        if old_node.text_type != TextType.TEXT or not links:
-            new_nodes.append(old_node)
-            continue
-        text = old_node.text
-        for name, url in links:
-            tokens = text.split(f'[{name}]({url})', 1)
-            if tokens[0]:
-                new_nodes.append(TextNode(tokens[0], TextType.TEXT))
-            new_nodes.append(TextNode(name, TextType.LINK, url))
-            text = tokens[1]
-        if text:
-            new_nodes.append(TextNode(text, TextType.TEXT))
-    return new_nodes
+    return _split_nodes_markup(old_nodes, extract_markdown_links, TextType.LINK, '')
