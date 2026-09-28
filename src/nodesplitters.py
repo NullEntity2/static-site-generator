@@ -24,3 +24,4 @@ def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: 
                 new_node = TextNode(tokens[i], text_type)
             new_nodes.append(new_node)
     return new_nodes
+
