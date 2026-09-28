@@ -33,7 +33,7 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
         links = extract_markdown_images(old_node.text)
         if not links:
             new_nodes.append(TextNode(old_node.text, TextType.TEXT))
-        while any(links):
+        while links:
             name, url = links.pop(0)
             tokens = old_node.text.split(f'![{name}]({url})', 1)
             new_nodes.extend([
@@ -50,7 +50,7 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
         links = extract_markdown_links(old_node.text)
         if not links:
             new_nodes.append(TextNode(old_node.text, TextType.TEXT))
-        while any(links):
+        while links:
             name, url = links.pop(0)
             tokens = old_node.text.split(f'[{name}]({url})', 1)
             new_nodes.extend([
