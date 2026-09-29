@@ -15,6 +15,7 @@ class TestBlockType(unittest.TestCase):
         ("##### 5 Heading", BlockType.HEADING),
         ("###### 6 Heading", BlockType.HEADING),
         ("####### 7 Heading", BlockType.PARAGRAPH),
+        (" 0 Heading", BlockType.PARAGRAPH),
         ("```\ncode\n```", BlockType.CODE),
         ("> some quote", BlockType.QUOTE),
         (">still a quote", BlockType.QUOTE),

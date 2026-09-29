@@ -10,9 +10,9 @@ class BlockType(Enum):
     ORDERED_LIST = 6
 
 def block_to_block_type(input: str) -> BlockType:
-    if re.match(r"#{,6} ", input):
+    if re.match(r"#{1,6} ", input):
         return BlockType.HEADING
-    if re.match(r"```\n.*\n```", input):
+    if re.match(r"```\n.*\n```", input, re.DOTALL):
         return BlockType.CODE
     lines = input.splitlines()
     if all(line.startswith(">") for line in lines):
