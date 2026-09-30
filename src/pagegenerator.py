@@ -5,7 +5,11 @@ from extractors import extract_title
 from markdowntohtmlnode import markdown_to_html_node
 
 
-def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
+def generate_page(
+        from_path: str, 
+        template_path: str, 
+        dest_path: str,
+        base_path: str) -> None:
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     contents = read_file(from_path)
     template = read_file(template_path)
@@ -15,7 +19,11 @@ def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
 
     title = extract_title(contents)
 
-    populated_template = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
+    populated_template = template \
+        .replace("{{ Title }}", title) \
+        .replace("{{ Content }}", html) \
+        .replace('href="/', f'href={base_path}') \
+        .replace('src="/', f'src={base_path}')
 
     write_file(populated_template, dest_path)
 

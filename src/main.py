@@ -1,13 +1,17 @@
 import os
 import shutil
+import sys
 
 from pagegenerator import generate_page
 
 def main():
-    if os.path.exists("public"):
-        shutil.rmtree("public")
-    copytree("static", "public")
-    generate_pages_recursive("content", "template.html", "public")
+    out_dir = "docs"
+    basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
+
+    if os.path.exists(out_dir):
+        shutil.rmtree(out_dir)
+    copytree("static", out_dir)
+    generate_pages_recursive("content", "template.html", out_dir, basepath)
 
 def copytree(src: str, dest: str) -> None:
     os.makedirs(dest, exist_ok=True)
@@ -20,15 +24,19 @@ def copytree(src: str, dest: str) -> None:
         else:
             copytree(src_path, dest_path)
 
-def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir_path: str) -> None:
+def generate_pages_recursive(
+        dir_path_content: str, 
+        template_path: str, 
+        dest_dir_path: str,
+        base_path: str) -> None:
     for name in os.listdir(dir_path_content):
         src_path = os.path.join(dir_path_content, name)
         if os.path.isfile(src_path):
             if name.endswith(".md"):
                 dest_path = os.path.join(dest_dir_path, name[:-3] + ".html")
-                generate_page(src_path, template_path, dest_path)
+                generate_page(src_path, template_path, dest_path, base_path)
         else:
-            generate_pages_recursive(src_path, template_path, os.path.join(dest_dir_path, name))
+            generate_pages_recursive(src_path, template_path, os.path.join(dest_dir_path, name), base_path)
 
 if __name__ == "__main__":
     main()
