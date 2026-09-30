@@ -31,14 +31,18 @@ class TestHTMLNode(unittest.TestCase):
         node = HTMLNode(props=props)
         self.assertEqual(node.props_to_html(), f' href="href" target="target"')
 
-    def test_props_to_html_missing_href(self):
-        props = {"target": "target"}
-        node = HTMLNode(props=props)
-        self.assertEqual(node.props_to_html(), "")
-
-    def test_props_to_html_missing_target(self):
+    def test_props_to_html_single_prop(self):
         props = {"href": "href"}
         node = HTMLNode(props=props)
+        self.assertEqual(node.props_to_html(), ' href="href"')
+
+    def test_props_to_html_image_props(self):
+        props = {"src": "src", "alt": "alt"}
+        node = HTMLNode(props=props)
+        self.assertEqual(node.props_to_html(), ' src="src" alt="alt"')
+
+    def test_props_to_html_no_props(self):
+        node = HTMLNode()
         self.assertEqual(node.props_to_html(), "")
 
     def test_repr(self):

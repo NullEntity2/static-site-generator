@@ -13,7 +13,7 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
                 raise ValueError("text_node.url must be set")
             if not text_node.text:
                 raise ValueError("text_node.text must be set")
-            return LeafNode("img", None, { 'src': text_node.url, "alt": text_node.text })
+            return LeafNode("img", "", { 'src': text_node.url, "alt": text_node.text })
         case TextType.ITALIC:
             return LeafNode("i", text_node.text)
         case TextType.LINK:
